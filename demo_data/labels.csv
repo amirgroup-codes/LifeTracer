@@ -1,0 +1,19 @@
+csv_file_name,sample_name,label
+"231003_04_Iceland_Soil_300uLDCM_100oC24h.csv","Iceland", 1
+"230823_06_Jarosite_Soil_300uLDCM_100oC24h.csv","Jarosite", 1
+"230823_01_Atacama_Soil_300uLDCM_100oC24h-001.csv","Atacama", 1
+"230823_05_Antarctica_Soil_300uLDCM_100oC24h-001.csv","Antarctica", 1
+"230823_07_Green_River_Shale_Soil_500uLDCM_100oC24h.csv","Green R. Shale", 1
+"230823_02_Rio_Tinto_Soil_300uLDCM_100oC24h.csv","Rio Tinto", 1
+"230830_03_Lignite_300uLDCM_100oC24h-001.csv","Lignite", 1
+"231003_03_Utah_Soil_300uLDCM_100oC24h.csv","Utah", 1
+"230901_05_GSFC_soil_300uLDCM_100oC24h.csv","GSFC", 1
+"230823_04_Murchison_Soil_300uLDCM_100oC24h-001.csv","Murchison Soil", 1
+"230830_02_Orgueil_300uLDCM_100oC24h-001.csv","Orgueil", 0
+"230901_06_ALH83100_300uLDCM_100oC24h.csv","ALH 83100", 0
+"230901_07_LON94101_300uLDCM_100oC24h.csv","LON 94101", 0
+"231003_01_AZ_400uLDCM_100oC24h.csv","Aguas Zarcas", 0
+"230823_03_Murchison_Pristine_2.0_300uLDCM_100oC24h-003.csv","Murchison", 0
+"231003_02_Jbilet_Winselwan_300uLDCM_100oC24h.csv","Jbilet Winselwan", 0
+"230901_08_LEW85311_300uLDCM_100oC24h.csv","LEW 85311", 0
+"230830_01_EET96029_300uLDCM_100oC24h.csv","EET 96029", 0
