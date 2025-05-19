@@ -43,7 +43,11 @@ The following dependencies will be automatically installed:
 
 # Analysis Pipeline
 
-For the demonstration we’ve included a small subset of 500 GB data (m/z 128 ± 0.5 for every sample). To reproduce the paper’s full results, simply replace the contents of `demo_data/raw/` with the complete raw chromatography files, which are available on request.
+For the demonstration we’ve included a small subset of 500 GB data (m/z 128 ± 0.5 for every sample). To reproduce the paper’s full results, simply replace the contents of `demo_data/raw/` with the complete raw chromatography files, which are available on request. Download the raw demo data from [this link](https://huggingface.co/datasets/DS-20202/LifeTracer_raw_demo_data/tree/main), and unzip it into the `demo_data/` directory:
+
+```bash
+unzip raw_demo_data.zip -d demo_data/
+```
 
 ## Step 1: Heatmap Extraction
 ```bash
