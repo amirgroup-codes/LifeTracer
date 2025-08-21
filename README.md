@@ -34,7 +34,7 @@ With the upcoming sample return missions to the Solar System where traces of pas
 ## Getting Started
 
 To reproduce the results from our research paper, please refer to our comprehensive notebook:
-[Getting Started Notebook](https://github.com/amirgroup-codes/LifeTracer/blob/main/Getting_Started.ipynb)
+[Getting Started Notebook](https://github.com/amirgroup-codes/LifeTracer/blob/main/Getting_Satrted.ipynb)
 
 This notebook provides a step-by-step guide through the complete pipeline from raw chromatographic data to trained classification models.
 
