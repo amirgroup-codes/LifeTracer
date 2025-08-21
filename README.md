@@ -23,13 +23,12 @@
 
 ### Abstract
 With the upcoming sample return missions to the Solar System where traces of past, extinct, or present life may be found, there is an urgent need to develop unbiased methods that can distinguish molecular distributions of organic compounds synthesized abiotically from those produced biotically but were subsequently altered through diagenetic processes. We conducted untargeted analyses on a collection of meteorite and terrestrial geologic samples using two-dimensional gas chromatography coupled with high-resolution time-of-flight mass spectrometry (GC×GC-HRTOF-MS) and compared their soluble non-polar and semi-polar organic species. To deconvolute the resulting large dataset, we developed LifeTracer, a computational framework for processing and downstream machine learning analysis of mass spectrometry data. LifeTracer identified predictive molecular features that distinguish abiotic from biotic origins and enabled a robust classification of meteorites from terrestrial samples based on the composition of their non-polar soluble organics.
-## Features
+## Tools
 
 - **Data Processing**: Comprehensive preprocessing pipeline for GC×GC-HRTOF-MS data
 - **Feature Extraction**: Automated extraction of molecular features from mass spectra
 - **Machine Learning**: Built-in classification algorithms optimized for distinguishing abiotic/biotic origins
 - **Visualization**: Tools for visualizing chromatographic data and classification results
-- **Reproducibility**: Complete workflow for reproducing published results
 
 ## Getting Started
 
