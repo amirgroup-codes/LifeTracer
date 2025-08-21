@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="img/logo_LT.png" width="200px" alt="LifeTracer Logo">
+  <img src="img/logo_LT.png" width="400px" alt="LifeTracer Logo">
 </div>
 
 # LifeTracer: Processing 2D Gas Chromatography and signature discovery
