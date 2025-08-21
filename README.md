@@ -1,6 +1,10 @@
-# LifeTracer
+<div align="center">
+  <img src="img/logo_LT.png" width="200px" alt="LifeTracer Logo">
+</div>
 
-**Processing 2D Gas Chromatography and signature discovery**
+# LifeTracer: Processing 2D Gas Chromatography and signature discovery
+
+
 
 [![Project Website](https://img.shields.io/badge/Project-Website-orange.svg)](https://life-tracer.github.io/)
 [![Version](https://img.shields.io/badge/version-1.0.0.0-blue.svg)](https://github.com/amirgroup-codes/LifeTracer)
