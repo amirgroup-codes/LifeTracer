@@ -1,2 +1,0 @@
-[console_scripts]
-lifetracer = lifetracer.__main__:main

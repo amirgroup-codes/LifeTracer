@@ -7,7 +7,7 @@ from .utils.heatmap_utils import create_folder_if_not_exists, load_heatmap_data,
 import argparse
 
 def plot_heatmap(config):
-    output_dir_heatmap = config['output_dir_heatmap']
+    output_dir_heatmap = config['heatmap_dir']
     csv_file_name_column = config['csv_file_name_column']
     labels_path = config['labels_path']
     m_z = config['m_z']

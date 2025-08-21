@@ -7,6 +7,7 @@ def main():
         "extract_heatmap": lifetracer.extract_heatmap, # Module 1
         "find_peaks": lifetracer.find_peaks, # Module 2
         "plot_heatmap": lifetracer.plot_heatmap,
+        "calibration_phase": lifetracer.calibration_phase,
     }
 
     parser = argparse.ArgumentParser(

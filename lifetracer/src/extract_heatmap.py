@@ -69,7 +69,7 @@ def heatmap_extraction(args):
 
     raw_csv_path = args['extract_heatmaps']['raw_csv_path']
     threshold = args['extract_heatmaps']['m_z_threshold']
-    output_dir_heatmap = args['output_dir_heatmap']
+    output_dir_heatmap = args['heatmap_dir']
     parallel = args['extract_heatmaps']['parallel_processing']
 
     log_path = os.path.join(output_dir_heatmap, 'extract_heatmaps.log')

@@ -305,11 +305,11 @@ def extract_peaks_process(save_peaks_path, config, params):
     samples = pd.read_csv(config['labels_path'])
     samples_name = samples[config['csv_file_name_column']].tolist()
 
-    first_time_axis = np.load(os.path.join(config['output_dir_TII_aligned'], f'first_time.npy'))
-    second_time_axis = np.load(os.path.join(config['output_dir_TII_aligned'], f'second_time.npy'))
+    first_time_axis = np.load(os.path.join(config['TII_aligned_dir'], f'first_time.npy'))
+    second_time_axis = np.load(os.path.join(config['TII_aligned_dir'], f'second_time.npy'))
 
-    rt1_axis = np.load(os.path.join(config['output_dir_TII_aligned'], 'first_time.npy'))
-    rt2_axis = np.load(os.path.join(config['output_dir_TII_aligned'], 'second_time.npy'))
+    rt1_axis = np.load(os.path.join(config['TII_aligned_dir'], 'first_time.npy'))
+    rt2_axis = np.load(os.path.join(config['TII_aligned_dir'], 'second_time.npy'))
     rt1_timestep = round(rt1_axis[1] - rt1_axis[0],3)
     rt2_timestep = round(rt2_axis[0] - rt2_axis[1],3)
     
@@ -317,7 +317,7 @@ def extract_peaks_process(save_peaks_path, config, params):
         lambda1 = param[0]
         lambda2 = param[1]
         m_z = str(param[2]).replace('.','_')
-        heatmaps = load_headmaps_list(config['output_dir_TII_aligned'],samples_name,m_z)
+        heatmaps = load_headmaps_list(config['TII_aligned_dir'],samples_name,m_z)
 
         df_peaks_list = []
         for idx, sample in enumerate(samples_name):

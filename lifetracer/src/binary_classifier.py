@@ -377,10 +377,10 @@ def binary_classifier(args):
     save_latex_table(top_feature_group_indices, top_featurs_path)
 
     # Plot specific features for figure 1b
-    # specific_features = [0,1,800,801,802,803,804, 1806, 4101, 5020, 5021, 6002, 9150,9151]
-    # features_info = features_info.iloc[specific_features]
-    # specific_features = [(index, f'({index}, {features_info.iloc[i]["m/z"]}, {features_info.iloc[i]["RT1_center"]/60:.2f}, {features_info.iloc[i]["RT2_center"]:.2f})') for i, index in enumerate(specific_features)]
-    # plot_top_features(X_train, coefficients, train_samples, top_featurs_path, args['label_column_name'], args['csv_file_name_column'], np.array(specific_features), type = 'specific')
+    specific_features = [0,1,800,801,802,803,804, 1806, 4101, 5020, 5021, 6002, 9150,9151]
+    features_info = features_info.iloc[specific_features]
+    specific_features = [(index, f'({index}, {features_info.iloc[i]["m/z"]}, {features_info.iloc[i]["RT1_center"]/60:.2f}, {features_info.iloc[i]["RT2_center"]:.2f})') for i, index in enumerate(specific_features)]
+    plot_top_features(X_train, coefficients, train_samples, top_featurs_path, args['label_column_name'], args['csv_file_name_column'], np.array(specific_features), type = 'specific')
 
     logger.info('Top 10 signatures plotted in top_coefficients folder.')
 
@@ -394,8 +394,8 @@ def binary_classifier(args):
 
     # logger.info('2D plot of peaks and signatures saved.')
     # Plotting 3D plot of peaks (png)
-    # plot_3d_peaks(peaks_features_df, samples,args['results_dir'], label = 'biotic',view = 'big')
-    # plot_3d_peaks(peaks_features_df, samples,args['results_dir'], label = 'abiotic', view = 'big')
+    plot_3d_peaks(peaks_features_df, samples,args['results_dir'], label = 'biotic',view = 'big')
+    plot_3d_peaks(peaks_features_df, samples,args['results_dir'], label = 'abiotic', view = 'big')
 
     # peaks_features_df = pd.read_csv('peaks_features_df.csv')
     # samples = pd.read_csv('samples.csv')
@@ -440,22 +440,22 @@ def binary_classifier(args):
     accuracy = accuracy_score(y_train, lr.predict(X_train))
     logger.info(f'Accuracy before zeroing out the coefficients of the noisy feature groups: {accuracy}')
 
-    # # Given a list of feature group indices, zero out the coefficients of the features in the feature groups and measure the accuracy drop
-    # ranking = [13,15,18,22,25,27,36,41,40,55,56,78,79, 83,84,85,86,87,88,89,90,91,92,93, 95,96,97,104,105,106,107,109,137,154,153,156,161,163,164,167,187,195,196,197,198,199,222,232,233,234,235,236,237,239,240,242]
+    # Given a list of feature group indices, zero out the coefficients of the features in the feature groups and measure the accuracy drop
+    ranking = [13,15,18,22,25,27,36,41,40,55,56,78,79, 83,84,85,86,87,88,89,90,91,92,93, 95,96,97,104,105,106,107,109,137,154,153,156,161,163,164,167,187,195,196,197,198,199,222,232,233,234,235,236,237,239,240,242]
 
-    # # Get the indices of the features in the feature groups
+    # Get the indices of the features in the feature groups
 
-    # feature_indices = []
-    # for index in ranking:
-    #     index += 1
-    #     df = pd.read_csv(os.path.join(args['results_dir'],f'feature_groups/rank_{index}.csv'))
-    #     feature_indices.extend(df['feature_index'].tolist())
+    feature_indices = []
+    for index in ranking:
+        index += 1
+        df = pd.read_csv(os.path.join(args['results_dir'],f'feature_groups/rank_{index}.csv'))
+        feature_indices.extend(df['feature_index'].tolist())
     
 
-    # # Zero out the coefficients of the features in the feature groups
-    # for index in feature_indices:
-    #     coefficients[index] = 0
+    # Zero out the coefficients of the features in the feature groups
+    for index in feature_indices:
+        coefficients[index] = 0
 
-    # # Recalculate accuracy
-    # accuracy = accuracy_score(y_train, lr.predict(X_train))
-    # logger.info(f'Accuracy after zeroing out the coefficients of the noisy feature groups: {accuracy}')
+    # Recalculate accuracy
+    accuracy = accuracy_score(y_train, lr.predict(X_train))
+    logger.info(f'Accuracy after zeroing out the coefficients of the noisy feature groups: {accuracy}')

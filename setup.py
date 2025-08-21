@@ -55,9 +55,11 @@ setup(
         'scipy==1.15.2',
         'scikit-learn==1.6.1',
         'plotly==6.0.1',
+        'svgpathtools==1.6.1',
+        'svgpath2mpl==1.0.0',
         'statsmodels==0.14.4',
         'xgboost==3.0.0',
-        'svgpathtools==1.6.1',
+        'statistics==1.0.3.5'
     ],
     python_requires=">=3.10.8",
     long_description=long_description,
@@ -70,6 +72,6 @@ setup(
             'lifetracer=lifetracer.__main__:main',
         ],
     },
-    author="Daniel Saeedi",
-    author_email="dsaeedi3@gatech.edu"
+    author="Your Name",
+    author_email=""
 )

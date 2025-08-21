@@ -11,7 +11,7 @@ import concurrent.futures
 
 class RetentionTimesAlignment:
     def __init__(self, samples_name_list : pd.DataFrame,
-                  mz_list : list, peaks_dir_path : str, features_out_path: str,  output_dir_TII_aligned : str,
+                  mz_list : list, peaks_dir_path : str, features_out_path: str,  TII_aligned_dir : str,
                   rt1_threshold : float, rt2_threshold : float, rt1_timestep: float, rt2_timestep: float) -> None:
         self.samples_name_list = samples_name_list
         self.mz_list = mz_list
@@ -19,7 +19,7 @@ class RetentionTimesAlignment:
         self.features_out_path = features_out_path
         self.rt1_threshold = rt1_threshold
         self.rt2_threshold = rt2_threshold
-        self.output_dir_TII_aligned = output_dir_TII_aligned
+        self.TII_aligned_dir = TII_aligned_dir
 
         self.rt1_timestep = rt1_timestep
         self.rt2_timestep = rt2_timestep
@@ -121,14 +121,14 @@ class RetentionTimesAlignment:
         else:
             return [], []
 
-def retention_times_alignment_process(params,peaks_dir_path,samples_name_list,mz_list,features_out_path, output_dir_TII_aligned, rt1_timestep, rt2_timestep):
+def retention_times_alignment_process(params,peaks_dir_path,samples_name_list,mz_list,features_out_path, TII_aligned_dir, rt1_timestep, rt2_timestep):
     for param in params:
         lam1 = param[0]
         lam2 = param[1]
         rt1_threshold,rt2_threshold = param[2],param[3]
 
         peaks_path = os.path.join(peaks_dir_path, f'peaks_lambda1_{lam1}_lambda2_{lam2}/')
-        rta = RetentionTimesAlignment(samples_name_list, mz_list, peaks_path, features_out_path, output_dir_TII_aligned, rt1_threshold, rt2_threshold, rt1_timestep, rt2_timestep)
+        rta = RetentionTimesAlignment(samples_name_list, mz_list, peaks_path, features_out_path, TII_aligned_dir, rt1_threshold, rt2_threshold, rt1_timestep, rt2_timestep)
         features, feature_info_df = rta.align_retention_times()
 
         np.save(os.path.join(features_out_path, f'features_lam1_{lam1}_lam2_{lam2}_rt1th_{rt1_threshold}_rt2th_{rt2_threshold}.npy'), features)
@@ -160,8 +160,8 @@ def retention_times_alignment(config):
 
     create_folder_if_not_exists(os.path.join(config['features_path'],'peaks_per_parameter/'))
 
-    rt1_axis = np.load(os.path.join(config['output_dir_TII_aligned'], 'first_time.npy'))
-    rt2_axis = np.load(os.path.join(config['output_dir_TII_aligned'], 'second_time.npy'))
+    rt1_axis = np.load(os.path.join(config['TII_aligned_dir'], 'first_time.npy'))
+    rt2_axis = np.load(os.path.join(config['TII_aligned_dir'], 'second_time.npy'))
     rt1_timestep = round(rt1_axis[1] - rt1_axis[0],3)
     rt2_timestep = round(rt2_axis[0] - rt2_axis[1],3)
 
@@ -170,9 +170,9 @@ def retention_times_alignment(config):
             executor.map(retention_times_alignment_process, splits, itertools.repeat(config['peaks_dir_path']), 
                 itertools.repeat(samples_name), itertools.repeat(mz_list), 
                 itertools.repeat(config['features_path']),
-                itertools.repeat(config['output_dir_TII_aligned']),
+                itertools.repeat(config['TII_aligned_dir']),
                 itertools.repeat(rt1_timestep), itertools.repeat(rt2_timestep))
     else:
-        retention_times_alignment_process(params_combination, config['peaks_dir_path'], samples_name, mz_list, config['features_path'], config['output_dir_TII_aligned'], rt1_timestep, rt2_timestep)
+        retention_times_alignment_process(params_combination, config['peaks_dir_path'], samples_name, mz_list, config['features_path'], config['TII_aligned_dir'], rt1_timestep, rt2_timestep)
     
     logger.info('Retention times alignment process is completed.')

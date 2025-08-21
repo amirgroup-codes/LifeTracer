@@ -7,6 +7,7 @@ from .src import (
     parameters_selection,
     evaluation,
     TII_alignment,
+    calibration_phase,
 )
 
 __version__ = "1.0.0"

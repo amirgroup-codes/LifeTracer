@@ -659,9 +659,20 @@ def plot_3d_peaks(peaks_features_df, samples,result_dir, label = 'biotic', view 
 
     oval = Path(verts,codes)
 
+    pentagon_marker = get_marker('markers/hexagon-figure-form-geometry-graphic-line-svgrepo-com.svg')
+    Hollow_Plus_marker = get_marker('markers/Hollow_Plus.svg')
+    cool_marker2 = get_marker('markers/cool_marker2.svg')
+    cool_marker3 = get_marker('markers/cool_marker3.svg')
     hollow_circle = get_marker('markers/noun-circle-hatch-empty-1625504.svg')
+    star_marker = get_marker('markers/star-thin-svgrepo-com.svg')
     diamond = get_marker('markers/diamond-figure-form-geometry-graphic-line-svgrepo-com.svg')
+    pyramid = get_marker('markers/geometry-pyramid-figure-form-graphic-line-svgrepo-com.svg')
+    star_marker2 = get_marker('markers/star-figure-form-geometry-graphic-line-svgrepo-com.svg')
     hollow_square = get_marker('markers/geometry-shape-square-figure-form-graphic-svgrepo-com.svg')
+    hollow_rectangle = get_marker('markers/shape-svgrepo-com.svg')
+    triangle_marker = get_marker('markers/triangle-svgrepo-com.svg')
+    leaf_marker = get_marker('markers/leaf-97-svgrepo-com.svg')
+    # Small_Plus = get_marker('markers/Small_Plus.svg')
 
     
     # markers_biotic = [Hollow_Plus_marker, leaf_marker, pentagon_marker, hollow_circle, diamond, triangle_marker, 'x',star_marker,'+',hollow_square]

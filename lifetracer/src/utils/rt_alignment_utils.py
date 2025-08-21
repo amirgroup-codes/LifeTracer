@@ -21,6 +21,7 @@ def which_cluster(y_values, x_values, peaks_df, cluster_rectangles):
     x_index = np.where(x_values == peaks_df['RT1_center'])[0][0]
     return find_rectangles_containing_point(cluster_rectangles, (y_index, x_index))
 
+
 def find_clusters_within_threshold(points, threshold_x, threshold_y):
     """
     Find clusters of points where the maximum distance in x and y within each cluster is within certain thresholds,

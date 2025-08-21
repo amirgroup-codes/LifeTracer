@@ -21,7 +21,7 @@ def process_seed_lr(seed, params_combination, config):
     solver = 'liblinear'
     
     np.random.seed(seed)
-    python_random.seed(seed)
+    python_random.seed(int(seed))
     kf = KFold(n_splits=9,shuffle=True, random_state=seed)
 
     samples = pd.read_csv(config['labels_path'])
@@ -95,7 +95,7 @@ def process_seed_lr(seed, params_combination, config):
 
 def process_seed_svm(seed, params_combination, config):
     np.random.seed(seed)
-    python_random.seed(seed)
+    python_random.seed(int(seed))
     kf = KFold(n_splits=9,shuffle=True, random_state=seed)
 
     samples = pd.read_csv(config['labels_path'])
@@ -169,7 +169,7 @@ def process_seed_svm(seed, params_combination, config):
 
 def process_seed_rf(seed, params_combination, config):
     np.random.seed(seed)
-    python_random.seed(seed)
+    python_random.seed(int(seed))
     kf = KFold(n_splits=9,shuffle=True, random_state=seed)
 
     samples = pd.read_csv(config['labels_path'])
@@ -247,7 +247,7 @@ def process_seed_rf(seed, params_combination, config):
 def process_seed_xgboost(seed, params_combination, config):
     # Ensure reproducibility
     np.random.seed(seed)
-    python_random.seed(seed)
+    python_random.seed(int(seed))
 
     # Define KFold cross-validation
     kf = KFold(n_splits=9, shuffle=True, random_state=seed)
@@ -308,7 +308,7 @@ def process_seed_xgboost(seed, params_combination, config):
 
 def process_seed_NB(seed, params_combination, config):
     np.random.seed(seed)
-    python_random.seed(seed)
+    python_random.seed(int(seed))
     kf = KFold(n_splits=9,shuffle=True, random_state=seed)
 
     samples = pd.read_csv(config['labels_path'])
@@ -424,6 +424,7 @@ def eval(config):
     model = config['model']
 
     log_path = os.path.join(config['eval_path'], 'eval.log')
+    create_folder_if_not_exists(config['eval_path'])
     logger.add(log_path, rotation="10 MB")
 
     lam1 = config[model]['lambda1']
