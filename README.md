@@ -160,7 +160,7 @@ The package works with both raw and processed chromatography data. Data files ca
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on how to submit pull requests, report issues, or request features.
+We welcome contributions! Please submit pull requests, report issues, or request features.
 
 ## License
 
