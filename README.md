@@ -108,14 +108,55 @@ python -c "import lifetracer; print('LifeTracer installed successfully!')"
 | **Path Problems** | Ensure you're in the correct project directory |
 | **Import Errors** | Check Python version matches 3.10.8 |
 
-## Data
-
-### Download Options
+# Data
 
 The package works with both raw and processed chromatography data. Data files can be downloaded from hugginface:
 
-1. **Raw Data**: Unprocessed GC×GC-HRTOF-MS output files
-2. **Processed Data**: Pre-processed datasets ready for analysis
+## Raw Data (GC×GC-HRTOF-MS CSVs)
+
+| Group     | Sample / Item                           | Link                                                                                                                                                             | Description                                                                        |
+| --------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Meteorite | Murchison Pristine 2.0 (replicate -003) | [click here to download](https://huggingface.co/datasets/DS-20202/Meteorites_LifeTracer/resolve/main/230823_03_Murchison_Pristine_2.0_300uLDCM_100oC24h-003.csv) | Raw instrument export; meteorite extract; 300 µL DCM; 100 °C for 24 h.             |
+| Meteorite | EET96029                                | [click here to download](https://huggingface.co/datasets/DS-20202/Meteorites_LifeTracer/resolve/main/230830_01_EET96029_300uLDCM_100oC24h.csv)                   | Raw instrument export; meteorite extract; 300 µL DCM; 100 °C for 24 h.             |
+| Meteorite | Orgueil (replicate -001)                | [click here to download](https://huggingface.co/datasets/DS-20202/Meteorites_LifeTracer/resolve/main/230830_02_Orgueil_300uLDCM_100oC24h-001.csv)                | Raw instrument export; meteorite extract; 300 µL DCM; 100 °C for 24 h.             |
+| Meteorite | ALH83100                                | [click here to download](https://huggingface.co/datasets/DS-20202/Meteorites_LifeTracer/resolve/main/230901_06_ALH83100_300uLDCM_100oC24h.csv)                   | Raw instrument export; meteorite extract; 300 µL DCM; 100 °C for 24 h.             |
+| Meteorite | LON94101                                | [click here to download](https://huggingface.co/datasets/DS-20202/Meteorites_LifeTracer/resolve/main/230901_07_LON94101_300uLDCM_100oC24h.csv)                   | Raw instrument export; meteorite extract; 300 µL DCM; 100 °C for 24 h.             |
+| Meteorite | LEW85311                                | [click here to download](https://huggingface.co/datasets/DS-20202/Meteorites_LifeTracer/resolve/main/230901_08_LEW85311_300uLDCM_100oC24h.csv)                   | Raw instrument export; meteorite extract; 300 µL DCM; 100 °C for 24 h.             |
+| Meteorite | AZ                                      | [click here to download](https://huggingface.co/datasets/DS-20202/Meteorites_LifeTracer/resolve/main/231003_01_AZ_400uLDCM_100oC24h.csv)                         | Raw instrument export; meteorite extract; 400 µL DCM; 100 °C for 24 h.             |
+| Meteorite | Jbilet Winselwan                        | [click here to download](https://huggingface.co/datasets/DS-20202/Meteorites_LifeTracer/resolve/main/231003_02_Jbilet_Winselwan_300uLDCM_100oC24h.csv)           | Raw instrument export; meteorite extract; 300 µL DCM; 100 °C for 24 h.             |
+| Soil      | Atacama Soil (replicate -001)           | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/230823_01_Atacama_Soil_300uLDCM_100oC24h-001.csv)           | Raw instrument export; soil extract; 300 µL DCM; 100 °C for 24 h.                  |
+| Soil      | Rio Tinto Soil                          | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/230823_02_Rio_Tinto_Soil_300uLDCM_100oC24h.csv)             | Raw instrument export; soil extract; 300 µL DCM; 100 °C for 24 h.                  |
+| Soil      | Murchison Soil (replicate -001)         | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/230823_04_Murchison_Soil_300uLDCM_100oC24h-001.csv)         | Raw instrument export; soil extract; 300 µL DCM; 100 °C for 24 h.                  |
+| Soil      | Antarctica Soil (replicate -001)        | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/230823_05_Antarctica_Soil_300uLDCM_100oC24h-001.csv)        | Raw instrument export; soil extract; 300 µL DCM; 100 °C for 24 h.                  |
+| Soil      | Jarosite Soil                           | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/230823_06_Jarosite_Soil_300uLDCM_100oC24h.csv)              | Raw instrument export; soil extract; 300 µL DCM; 100 °C for 24 h.                  |
+| Soil      | Green River Shale Soil                  | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/230823_07_Green_River_Shale_Soil_500uLDCM_100oC24h.csv)     | Raw instrument export; soil extract; 500 µL DCM; 100 °C for 24 h.                  |
+| Soil      | GSFC Soil                               | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/230901_05_GSFC_soil_300uLDCM_100oC24h.csv)                  | Raw instrument export; soil extract; 300 µL DCM; 100 °C for 24 h.                  |
+| Soil      | Lignite (replicate -001)                | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/230830_03_Lignite_300uLDCM_100oC24h-001.csv)                | Raw instrument export; soil/organic sediment extract; 300 µL DCM; 100 °C for 24 h. |
+| Soil      | Utah Soil                               | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/231003_03_Utah_Soil_300uLDCM_100oC24h.csv)                  | Raw instrument export; soil extract; 300 µL DCM; 100 °C for 24 h.                  |
+| Soil      | Iceland Soil                            | [click here to download](https://huggingface.co/datasets/DS-20202/SoilSample-LifeTracer/resolve/main/231003_04_Iceland_Soil_300uLDCM_100oC24h.csv)               | Raw instrument export; soil extract; 300 µL DCM; 100 °C for 24 h.                  |
+
+## Processed Data
+
+| Set                       | File / Part                 | Link                                                                                                                                 | Description                                                                              |
+| ------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| Unaligned TIIs (heatmaps) | heatmaps.tar.gz.part-aa     | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/heatmaps.tar.gz.part-aa)    | Split archive part; unaligned Total Ion Image heatmaps. Concatenate parts, then extract. |
+| Unaligned TIIs (heatmaps) | heatmaps.tar.gz.part-ab     | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/heatmaps.tar.gz.part-ab)    | Split archive part; unaligned TII heatmaps.                                              |
+| Unaligned TIIs (heatmaps) | heatmaps.tar.gz.part-ac     | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/heatmaps.tar.gz.part-ac)    | Split archive part; unaligned TII heatmaps.                                              |
+| Unaligned TIIs (heatmaps) | heatmaps.tar.gz.part-ad     | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/heatmaps.tar.gz.part-ad)    | Split archive part; unaligned TII heatmaps.                                              |
+| Aligned TII               | TII\_aligned.tar.gz.part-aa | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/TII_aligned.tar.gz.part-aa) | Split archive part; aligned Total Ion Images. Concatenate parts, then extract.           |
+| Aligned TII               | TII\_aligned.tar.gz.part-ab | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/TII_aligned.tar.gz.part-ab) | Split archive part; aligned TIIs.                                                        |
+| Aligned TII               | TII\_aligned.tar.gz.part-ac | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/TII_aligned.tar.gz.part-ac) | Split archive part; aligned TIIs.                                                        |
+| Aligned TII               | TII\_aligned.tar.gz.part-ad | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/TII_aligned.tar.gz.part-ad) | Split archive part; aligned TIIs.                                                        |
+| Aligned TII               | TII\_aligned.tar.gz.part-ae | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/TII_aligned.tar.gz.part-ae) | Split archive part; aligned TIIs.                                                        |
+| Aligned TII               | TII\_aligned.tar.gz.part-af | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/TII_aligned.tar.gz.part-af) | Split archive part; aligned TIIs.                                                        |
+| Peaks                     | peaks.zip                   | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/peaks.zip)                  | Detected peak tables per sample (e.g., retention times, intensities).                |
+| Features                  | features.zip                | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/features.zip)               | Feature matrix/metadata derived from peaks/TII (aligned features for modeling).          |
+| Calibration Phase         | calibration\_phase.zip      | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/calibration_phase.zip)      | Intermediate files for automatic parameter selection                             |
+| Parameter Selection       | parameters\_selection.zip   | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/parameters_selection.zip)   | Parameter sweeps/selection results used for final model.                    |
+| Final Paper Results       | lr\_l2\_results.zip         | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/lr_l2_results.zip)          | Final result bundle (e.g., logistic-regression L2 results reported in the paper).        |
+| Model Evaluations         | eval.zip                    | [click here to download](https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/eval.zip)                   | Evaluation outputs and metrics for trained models.                                       |
+
+*Note:* For any `.tar.gz.part-xx` sets, concatenate parts in order (e.g., `cat file.tar.gz.part-* > file.tar.gz`) before extracting.
 
 ## Contributing
 
