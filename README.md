@@ -2,7 +2,7 @@
   <img src="img/logo_LT.png" width="400px" alt="LifeTracer Logo">
 </div>
 
-# LifeTracer: Processing 2D Gas Chromatography and signature discovery
+# LifeTracer: comprehensive Python package for 2D gas chromatography analysis and signature discovery
 
 
 
