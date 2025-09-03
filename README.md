@@ -28,13 +28,17 @@ With the upcoming sample return missions to the Solar System where traces of pas
 - **Machine Learning**: Built-in classification algorithms optimized for distinguishing abiotic/biotic origins
 - **Visualization**: Tools for visualizing chromatographic data and classification results
 
-## Reprocuding the results
+## Reproducing the Results
 
-To reproduce the results from our research paper, please refer to our comprehensive notebook. This notebook provides a step-by-step guide through the complete pipeline from raw chromatographic data to trained classification models:
-[Full paper results](https://github.com/amirgroup-codes/LifeTracer/blob/main/reproduce_paper_results.ipynb)
+To replicate the findings from our research paper, we provide a detailed Jupyter notebook that walks through the full pipeline—from raw chromatographic data to the final trained classification models:
+👉 [Full Paper Results Notebook](https://github.com/amirgroup-codes/LifeTracer/blob/main/reproduce_paper_results.ipynb)
 
-To reproduce the logisitic regression results and its corresponding plots, see the following notebook:
-[Logistic Regression Results](https://github.com/amirgroup-codes/LifeTracer/blob/main/logistic_regression_plots.ipynb)
+For reproducing the **logistic regression results** along with their corresponding plots, please refer to this dedicated notebook:
+👉 [Logistic Regression Results Notebook](https://github.com/amirgroup-codes/LifeTracer/blob/main/logistic_regression_plots.ipynb)
+
+Alternatively, you can also run **LifeTracer** directly in the free version of Google Colab:
+👉 [Run Logistic Regression on Colab](https://colab.research.google.com/drive/1NcgY0-8KmEIdr_hdsOXBAEzC4UyuSgq6?usp=sharing)
+
 
 ## Installation
 
