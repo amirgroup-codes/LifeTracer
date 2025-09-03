@@ -58,7 +58,6 @@ setup(
         'svgpathtools==1.6.1',
         'svgpath2mpl==1.0.0',
         'statsmodels==0.14.4',
-        'xgboost==3.0.0',
         'statistics==1.0.3.5'
     ],
     python_requires=">=3.10.8",
@@ -72,6 +71,6 @@ setup(
             'lifetracer=lifetracer.__main__:main',
         ],
     },
-    author="Your Name",
-    author_email=""
+    author="Daniel Saeedi",
+    author_email="saeedi[DOT]dania[AT]gmail[DOT]com"
 )

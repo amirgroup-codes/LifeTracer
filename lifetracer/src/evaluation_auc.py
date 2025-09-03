@@ -11,7 +11,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold, StratifiedKFold
 from loguru import logger
 from sklearn.naive_bayes import BernoulliNB
-from xgboost import XGBClassifier
 from tqdm import tqdm
 from .utils.heatmap_utils import create_folder_if_not_exists
 
@@ -435,17 +434,7 @@ def eval(config):
         else:
             for seed in seeds:
                 process_seed_rf(seed, params_combination, config)
-    elif model == 'xgboost':
-        n_estimators = config[model]['n_estimators']
-        params_combination = list(itertools.product(lam1,lam2,rt1_threshold,rt2_threshold,n_estimators))
 
-        if config['parallel_processing']:
-            with concurrent.futures.ProcessPoolExecutor() as executor:
-                executor.map(process_seed_xgboost, seeds, [params_combination]*num_seeds, [config]*num_seeds)
-        else:
-            for seed in seeds:
-                process_seed_xgboost(seed, params_combination, config)
-    
     elif model == 'NaiveBayes':
         alpha = config[model]['alpha']
         params_combination = list(itertools.product(lam1,lam2,rt1_threshold,rt2_threshold,alpha))

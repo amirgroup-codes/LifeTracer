@@ -17,26 +17,18 @@ config = {
     # Download peaks: https://huggingface.co/datasets/DS-20202/LifeTracer-Processed-Data/resolve/main/peaks.zip
     "features_path": "output/features", # Path to features directory
     "peaks_dir_path": "output/peaks", # Path to peaks directory
-    "eval_path":"output/eval/svm", # Change the path to your desired output directory
-
-    "model": "svm",
-    "svm": {
-        "C": [1e-3,1e-2,1e-1,1e0,1e+1,1e+2,1e+3],
-        "kernel": ["linear","poly","rbf","sigmoid"],
+    "eval_path":"output/eval/lr_l2", # Change the path to your desired output directory
+    
+    "model": "lr_l2",
+    "lr_l2": {
+        "C": [1e-4,1e-3,1e-2,1e-1,1e0,1e+1,1e+2,1e+3,1e+4],
         "lambda1": [5],
         "lambda2": [100],
         "rt1_threshold": [50],
         "rt2_threshold": [0.8],
-    },
+    }
 
-    # "model": "rf",
-    # "rf": {
-    #     "n_estimators": [20, 50, 100, 200, 500],
-    #     "lambda1": [5],
-    #     "lambda2": [100],
-    #     "rt1_threshold": [50],
-    #     "rt2_threshold": [0.8],
-    # }
+    # Uncomment the model you want to evaluate
 
     # "model": "lr_l1",
     # "lr_l1": {
@@ -47,6 +39,25 @@ config = {
     #     "rt2_threshold": [0.8],
     # }
 
+    
+    # "model": "svm",
+    # "svm": {
+    #     "C": [1e-3,1e-2,1e-1,1e0,1e+1,1e+2,1e+3],
+    #     "kernel": ["linear","poly","rbf","sigmoid"],
+    #     "lambda1": [5],
+    #     "lambda2": [100],
+    #     "rt1_threshold": [50],
+    #     "rt2_threshold": [0.8],
+    # },
+
+    # "model": "rf",
+    # "rf": {
+    #     "n_estimators": [20, 50, 100, 200, 500],
+    #     "lambda1": [5],
+    #     "lambda2": [100],
+    #     "rt1_threshold": [50],
+    #     "rt2_threshold": [0.8],
+    # }
 
     # "model": 'NaiveBayes',
     # "NaiveBayes": {

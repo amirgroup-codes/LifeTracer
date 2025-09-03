@@ -4,8 +4,6 @@
 
 # LifeTracer: comprehensive Python package for 2D gas chromatography analysis and signature discovery
 
-
-
 [![Project Website](https://img.shields.io/badge/Project-Website-orange.svg)](https://life-tracer.github.io/)
 [![Version](https://img.shields.io/badge/version-1.0.0.0-blue.svg)](https://github.com/amirgroup-codes/LifeTracer)
 [![Python](https://img.shields.io/badge/python-3.10.8-blue.svg)](https://www.python.org/downloads/)
