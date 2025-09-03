@@ -28,12 +28,13 @@ With the upcoming sample return missions to the Solar System where traces of pas
 - **Machine Learning**: Built-in classification algorithms optimized for distinguishing abiotic/biotic origins
 - **Visualization**: Tools for visualizing chromatographic data and classification results
 
-## Getting Started
+## Reprocuding the results
 
-To reproduce the results from our research paper, please refer to our comprehensive notebook:
-[Getting Started Notebook](https://github.com/amirgroup-codes/LifeTracer/blob/main/Getting_Satrted.ipynb)
+To reproduce the results from our research paper, please refer to our comprehensive notebook. This notebook provides a step-by-step guide through the complete pipeline from raw chromatographic data to trained classification models:
+[Full paper results](https://github.com/amirgroup-codes/LifeTracer/blob/main/reproduce_paper_results.ipynb)
 
-This notebook provides a step-by-step guide through the complete pipeline from raw chromatographic data to trained classification models.
+To reproduce the logisitic regression results and its corresponding plots, see the following notebook:
+[Logistic Regression Results](https://github.com/amirgroup-codes/LifeTracer/blob/main/logistic_regression_plots.ipynb)
 
 ## Installation
 

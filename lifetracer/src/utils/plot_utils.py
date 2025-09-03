@@ -151,24 +151,11 @@ def plot_top_features(X_train, coefficients, train_samples, results_dir, label_c
     plt.yticks(fontsize=8)
     
     if type == 'top':
-        plt.savefig(os.path.join(results_dir,f'top_features.pdf'), format="pdf", bbox_inches='tight', dpi=400)
+        plt.savefig(os.path.join(results_dir,f'Figure3_part_c.pdf'), format="pdf", bbox_inches='tight', dpi=400)
     else:
-        plt.savefig(os.path.join(results_dir,f'specific_features.pdf'), format="pdf", bbox_inches='tight', dpi=400)
+        plt.savefig(os.path.join(results_dir,f'Figure1_part_c.pdf'), format="pdf", bbox_inches='tight', dpi=400)
     
-    plt.close()  # Close the figure to free memory
-
-def plot_all_features(X_train, coefficients, train_samples, results_dir, label_column_name, csv_file_name_column):
-    
-    sns.set(font_scale=1.2)
-
-    # Define colors for each value
-    colors = ["white", "#3c5488", "#e64b35"]
-    cmap = mcolors.ListedColormap(colors)
-
-    sns.heatmap(X_selected, cmap=cmap, xticklabels=top_n_indices[:,1], yticklabels=train_samples['sample_name'].to_numpy() ,cbar=False, linecolor='gray', linewidth=0.5,square=True)
-    # Save the plot as a PDF file
-    # plt.tight_layout()
-    plt.savefig(os.path.join(results_dir,f'top_features.pdf'), format="pdf", bbox_inches='tight',dpi=400)
+    plt.close()
 
 def add_arrow(x_start,y_start,x_end,y_end, text,line_color='#a1caf7'):
     plt.annotate(text,               # text to display
@@ -464,7 +451,7 @@ def plot_3d_signatures(all_signatures, result_dir, view = 'small'):
     ax.yaxis._axinfo['grid'].update(color = '#dcdcdc', linestyle = '-', linewidth=0.5)
     ax.zaxis._axinfo['grid'].update(color = '#dcdcdc', linestyle = '-', linewidth=0.5)
 
-    plt.savefig(os.path.join(result_dir, 'Features_3d.pdf'), format='pdf')
+    plt.savefig(os.path.join(result_dir, 'Figure_S9_Features_3d.pdf'), format='pdf')
     plt.close()
 
 
@@ -599,7 +586,7 @@ def plot_3d_feature_groups(all_signatures, result_dir, view = 'small'):
     ax.yaxis._axinfo['grid'].update(color = '#dcdcdc', linestyle = '-', linewidth=0.5)
     ax.zaxis._axinfo['grid'].update(color = '#dcdcdc', linestyle = '-', linewidth=0.5)
 
-    plt.savefig(os.path.join(result_dir, 'Group_Features_3d.pdf'), format='pdf')
+    plt.savefig(os.path.join(result_dir, 'Figure3_part_a_Group_Features_3d.pdf'), format='pdf')
     plt.close()
 
 
@@ -777,7 +764,7 @@ def plot_3d_peaks(peaks_features_df, samples,result_dir, label = 'biotic', view 
     # Adjust layout to make room for the legend
     # plt.subplots_adjust(bottom=0.25,left=0.25,right=0.75,top=0.75)
 
-    plt.savefig(os.path.join(result_dir, f'Peaks_3d_{label}.pdf'), format='pdf')
+    plt.savefig(os.path.join(result_dir, f'Figure_S4_Peaks_3d_{label}.pdf'), format='pdf')
     plt.close()
 
 def plot_distribution_of_peaks(peaks_features_df, result_dir, x_axis = 'm/z', separate=True):
@@ -868,11 +855,11 @@ def plot_distribution_of_peaks(peaks_features_df, result_dir, x_axis = 'm/z', se
 
             # Save the plot
             if x_axis == 'm/z':
-                plt.savefig(os.path.join(result_dir, f'distribution_of_peaks_mz_{class_names[i]}.pdf'), format='pdf', bbox_inches='tight', dpi=400)
+                plt.savefig(os.path.join(result_dir, f'Figure2_distribution_of_peaks_mz_{class_names[i]}.pdf'), format='pdf', bbox_inches='tight', dpi=400)
             elif x_axis == 'RT1':
-                plt.savefig(os.path.join(result_dir, f'distribution_of_peaks_RT1_{class_names[i]}.pdf'), format='pdf', bbox_inches='tight', dpi=400)
+                plt.savefig(os.path.join(result_dir, f'Figure2_distribution_of_peaks_RT1_{class_names[i]}.pdf'), format='pdf', bbox_inches='tight', dpi=400)
             else:
-                plt.savefig(os.path.join(result_dir, f'distribution_of_peaks_RT2_{class_names[i]}.pdf'), format='pdf', bbox_inches='tight', dpi=400)
+                plt.savefig(os.path.join(result_dir, f'Figure2_distribution_of_peaks_RT2_{class_names[i]}.pdf'), format='pdf', bbox_inches='tight', dpi=400)
             
             plt.close()
     else:

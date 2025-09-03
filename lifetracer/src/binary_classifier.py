@@ -218,7 +218,7 @@ def plot_accuracy_drop_zeroing_coefficients(X_train, y_train, lr_model, result_d
     plt.grid(True)
     
     # Save the plot
-    plt.savefig(os.path.join(result_dir,'accuracy_drop_zeroing_coefficients_plot.pdf'),format='pdf',bbox_inches='tight', dpi=300)
+    plt.savefig(os.path.join(result_dir,'Figure_S1_accuracy_drop_zeroing_coefficients_plot.pdf'),format='pdf',bbox_inches='tight', dpi=300)
     plt.close()
     
     # Restore original coefficients
@@ -271,7 +271,9 @@ def feature_group_finder(df,path, features_info, labels):
             feature_gp_info.append(feature_groups.iloc[0])
     
     # Combined the feature groups
-    df = pd.concat(features_groups_combined).to_csv(os.path.join(path, 'feature_groups_combined.csv'))
+    df = pd.concat(features_groups_combined)
+
+    # df.to_csv(os.path.join(path, 'feature_groups_combined.csv'))
     
     # Assuming feature_gp_info is your data
     df = pd.DataFrame(feature_gp_info, columns=['coefficient', 'm/z', 'RT1', 'RT2', 'RT1_center', 'RT2_center', 'samples', 'feature_index', 'class'])
@@ -440,7 +442,7 @@ def binary_classifier(args):
     accuracy = accuracy_score(y_train, lr.predict(X_train))
     logger.info(f'Accuracy before zeroing out the coefficients of the noisy feature groups: {accuracy}')
 
-    # Given a list of feature group indices, zero out the coefficients of the features in the feature groups and measure the accuracy drop
+    # Given a list of feature group indices (determined by experts to be valid peaks), zero out the coefficients of the features in the feature groups and measure the accuracy drop
     ranking = [13,15,18,22,25,27,36,41,40,55,56,78,79, 83,84,85,86,87,88,89,90,91,92,93, 95,96,97,104,105,106,107,109,137,154,153,156,161,163,164,167,187,195,196,197,198,199,222,232,233,234,235,236,237,239,240,242]
 
     # Get the indices of the features in the feature groups
