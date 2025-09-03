@@ -6,6 +6,7 @@ from .src import (
     binary_classifier,
     parameters_selection,
     evaluation,
+    evaluation_auc,
     TII_alignment,
     calibration_phase,
 )

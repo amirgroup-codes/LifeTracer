@@ -6,9 +6,9 @@ import random as python_random
 import pandas as pd
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, StratifiedKFold
 from loguru import logger
 from sklearn.naive_bayes import BernoulliNB
 from xgboost import XGBClassifier
@@ -22,7 +22,7 @@ def process_seed_lr(seed, params_combination, config):
     
     np.random.seed(seed)
     python_random.seed(int(seed))
-    kf = KFold(n_splits=9,shuffle=True, random_state=seed)
+    skf = StratifiedKFold(n_splits=6,shuffle=True, random_state=seed)
 
     samples = pd.read_csv(config['labels_path'])
     features_combined = np.zeros((len(samples),2))
@@ -30,8 +30,10 @@ def process_seed_lr(seed, params_combination, config):
     # Cache for features to avoid repeated disk reads
     features_cache = {}
 
+    samples_labels = samples[config['label_column_name']].to_numpy()
+
     log = []
-    for rest_index, test_index in kf.split(features_combined):
+    for rest_index, test_index in skf.split(features_combined, samples_labels):
        
         for param in tqdm(params_combination, desc=f'Seed {seed} - Processing parameters'):
             lam1 = param[0]
@@ -46,14 +48,17 @@ def process_seed_lr(seed, params_combination, config):
                 features_cache[feature_key] = np.load(os.path.join(config['features_path'], f'features_{feature_key}.npy'))
             features = features_cache[feature_key]
 
-            correct_val = 0
-            for val_id in rest_index:
-                train_index = np.delete(rest_index,np.where(rest_index == val_id))
+            # Inner loop for leave-one-out validation
+            skf_inner = StratifiedKFold(n_splits=5,shuffle=True, random_state=seed)
+            inner_features = features[rest_index]
+            inner_labels = samples_labels[rest_index]
+            inner_auc = []
+            for train_index, val_index in skf_inner.split(inner_features, inner_labels):
 
-                X_val = features[val_id].reshape(1,-1)
-                y_val = samples[config['label_column_name']].to_numpy()[val_id].reshape(1,-1)
-                X_train = features[train_index]
-                y_train = samples[config['label_column_name']].to_numpy()[train_index]
+                X_val = inner_features[val_index]
+                y_val = inner_labels[val_index]
+                X_train = inner_features[train_index]
+                y_train = inner_labels[train_index]
                 
                 lr = LogisticRegression(
                     penalty=model,
@@ -65,12 +70,13 @@ def process_seed_lr(seed, params_combination, config):
                 # Fit the classifier to the data
                 lr.fit(X_train, y_train)
 
-                # Make predictions on the test set and apply threshold
-                prediction = lr.predict(X_val)
+                # Compute auc
+                auc = roc_auc_score(y_val, lr.predict_proba(X_val)[:, 1])
 
-                if prediction == y_val:
-                    correct_val += 1
-            
+                inner_auc.append(auc)
+
+            auc_val_mean = np.mean(inner_auc)
+
             # Train on all training set
             lr = LogisticRegression(
                 penalty=model,
@@ -78,25 +84,27 @@ def process_seed_lr(seed, params_combination, config):
                 C=C,
                 random_state=seed,
             )
+
+
             lr.fit(features[rest_index], samples[config['label_column_name']].to_numpy()[rest_index])
 
             X_test = features[test_index]
             y_test = samples[config['label_column_name']].to_numpy()[test_index]
-            predictions_test = lr.predict(X_test)
-            test_acc = accuracy_score(y_test, predictions_test)
-            log.append((lam1,lam2,rt1_th,rt2_th,correct_val/(rest_index.shape[0]),test_acc,test_index,C))
+            predictions_test = lr.predict_proba(X_test)
+            test_AUC = roc_auc_score(y_test, predictions_test[:, 1])
+            log.append((lam1,lam2,rt1_th,rt2_th,auc_val_mean,test_AUC,test_index,C))
 
             # Clear some memory if cache is too large
             if len(features_cache) > 10:  # Keep only last 10 feature sets
                 oldest_key = next(iter(features_cache))
                 del features_cache[oldest_key]
 
-    pd.DataFrame(log,columns=['lam1','lam2','rt1_threshold','rt2_threshold','val_acc','test_acc','test_id','C']).to_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),index=False)
+    pd.DataFrame(log,columns=['lam1','lam2','rt1_threshold','rt2_threshold','val_AUC','test_AUC','test_id','C']).to_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),index=False)
 
 def process_seed_svm(seed, params_combination, config):
     np.random.seed(seed)
     python_random.seed(int(seed))
-    kf = KFold(n_splits=9,shuffle=True, random_state=seed)
+    skf = StratifiedKFold(n_splits=6,shuffle=True, random_state=seed)
 
     samples = pd.read_csv(config['labels_path'])
     features_combined = np.zeros((len(samples),2))
@@ -105,7 +113,10 @@ def process_seed_svm(seed, params_combination, config):
     features_cache = {}
 
     log = []
-    for rest_index, test_index in kf.split(features_combined):
+
+    samples_labels = samples[config['label_column_name']].to_numpy()
+
+    for rest_index, test_index in skf.split(features_combined, samples_labels):
        
         for param in tqdm(params_combination, desc=f'Seed {seed} - Processing parameters'):
             lam1 = param[0]
@@ -121,56 +132,59 @@ def process_seed_svm(seed, params_combination, config):
                 features_cache[feature_key] = np.load(os.path.join(config['features_path'], f'features_{feature_key}.npy'))
             features = features_cache[feature_key]
 
-            correct_val = 0
-            for val_id in rest_index:
-                train_index = np.delete(rest_index,np.where(rest_index == val_id))
+            # Inner loop for leave-one-out validation
+            skf_inner = StratifiedKFold(n_splits=5,shuffle=True, random_state=seed)
+            inner_features = features[rest_index]
+            inner_labels = samples_labels[rest_index]
+            inner_auc = []
+            for train_index, val_index in skf_inner.split(inner_features, inner_labels):
 
-                X_val = features[val_id].reshape(1,-1)
-                y_val = samples[config['label_column_name']].to_numpy()[val_id].reshape(1,-1)
-                X_train = features[train_index]
-                y_train = samples[config['label_column_name']].to_numpy()[train_index]
+                X_val = inner_features[val_index]
+                y_val = inner_labels[val_index]
+                X_train = inner_features[train_index]
+                y_train = inner_labels[train_index]
                 
                 # Optimize SVM configuration for speed
                 svc = svm.SVC(
                     kernel=kernel,
                     C=C,
                     random_state=seed,
+                    probability=True,
                 )
 
                 # Fit the classifier to the data
                 svc.fit(X_train, y_train)
 
-                # Make predictions on the test set and apply threshold
-                prediction = svc.predict(X_val)
+                inner_auc.append(roc_auc_score(y_val, svc.predict_proba(X_val)[:, 1]))
 
-                if prediction == y_val:
-                    correct_val += 1
-            
+            auc_val_mean = np.mean(inner_auc)
+
             # Train on all training set
             svc = svm.SVC(
                 kernel=kernel,
                 C=C,
                 random_state=seed,
+                probability=True,
             )
             svc.fit(features[rest_index], samples[config['label_column_name']].to_numpy()[rest_index])
 
             X_test = features[test_index]
             y_test = samples[config['label_column_name']].to_numpy()[test_index]
-            predictions_test = svc.predict(X_test)
-            test_acc = accuracy_score(y_test, predictions_test)
-            log.append((lam1,lam2,rt1_th,rt2_th,correct_val/(rest_index.shape[0]),test_acc,test_index,C))
+            predictions_test = svc.predict_proba(X_test)
+            test_AUC = roc_auc_score(y_test, predictions_test[:, 1])
+            log.append((lam1,lam2,rt1_th,rt2_th,auc_val_mean,test_AUC,test_index,C))
 
             # Clear some memory if cache is too large
             if len(features_cache) > 10:  # Keep only last 10 feature sets
                 oldest_key = next(iter(features_cache))
                 del features_cache[oldest_key]
 
-    pd.DataFrame(log,columns=['lam1','lam2','rt1_threshold','rt2_threshold','val_acc','test_acc','test_id','C']).to_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),index=False)
+    pd.DataFrame(log,columns=['lam1','lam2','rt1_threshold','rt2_threshold','val_AUC','test_AUC','test_id','C']).to_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),index=False)
 
 def process_seed_rf(seed, params_combination, config):
     np.random.seed(seed)
     python_random.seed(int(seed))
-    kf = KFold(n_splits=9,shuffle=True, random_state=seed)
+    skf = StratifiedKFold(n_splits=6,shuffle=True, random_state=seed)
 
     samples = pd.read_csv(config['labels_path'])
     features_combined = np.zeros((len(samples),2))
@@ -179,7 +193,10 @@ def process_seed_rf(seed, params_combination, config):
     features_cache = {}
 
     log = []
-    for rest_index, test_index in kf.split(features_combined):
+
+    samples_labels = samples[config['label_column_name']].to_numpy()
+
+    for rest_index, test_index in skf.split(features_combined, samples_labels):
         for param in tqdm(params_combination, desc=f'Seed {seed} - Processing parameters'):
             lam1 = param[0]
             lam2 = param[1]
@@ -193,14 +210,17 @@ def process_seed_rf(seed, params_combination, config):
                 features_cache[feature_key] = np.load(os.path.join(config['features_path'], f'features_{feature_key}.npy'))
             features = features_cache[feature_key]
 
-            correct_val = 0
-            for val_id in rest_index:
-                train_index = np.delete(rest_index,np.where(rest_index == val_id))
+            # Inner loop for leave-one-out validation
+            skf_inner = StratifiedKFold(n_splits=5,shuffle=True, random_state=seed)
+            inner_features = features[rest_index]
+            inner_labels = samples_labels[rest_index]
+            inner_auc = []
+            for train_index, val_index in skf_inner.split(inner_features, inner_labels):
 
-                X_val = features[val_id].reshape(1,-1)
-                y_val = samples[config['label_column_name']].to_numpy()[val_id].reshape(1,-1)
-                X_train = features[train_index]
-                y_train = samples[config['label_column_name']].to_numpy()[train_index]
+                X_val = inner_features[val_index]
+                y_val = inner_labels[val_index]
+                X_train = inner_features[train_index]
+                y_train = inner_labels[train_index]
                 
                 # Optimize RandomForest configuration for speed
                 rf = RandomForestClassifier(
@@ -214,11 +234,7 @@ def process_seed_rf(seed, params_combination, config):
                 # Fit the classifier to the data
                 rf.fit(X_train, y_train)
 
-                # Make predictions on the test set and apply threshold
-                prediction = rf.predict(X_val)
-
-                if prediction == y_val:
-                    correct_val += 1
+                inner_auc.append(roc_auc_score(y_val, rf.predict_proba(X_val)[:, 1]))
             
             # Train on all training set
             rf = RandomForestClassifier(
@@ -233,83 +249,23 @@ def process_seed_rf(seed, params_combination, config):
             X_test = features[test_index]
             y_test = samples[config['label_column_name']].to_numpy()[test_index]
             predictions_test = rf.predict(X_test)
-            test_acc = accuracy_score(y_test, predictions_test)
-            log.append((lam1,lam2,rt1_th,rt2_th,correct_val/(rest_index.shape[0]),test_acc,test_index,n_estimators))
+            test_AUC = roc_auc_score(y_test, predictions_test)
+            val_AUC = roc_auc_score(y_val, rf.predict_proba(X_val)[:, 1])
+            log.append((lam1,lam2,rt1_th,rt2_th,val_AUC,test_AUC,test_index,n_estimators))
 
             # Clear some memory if cache is too large
             if len(features_cache) > 10:  # Keep only last 10 feature sets
                 oldest_key = next(iter(features_cache))
                 del features_cache[oldest_key]
 
-            logger.info(f'lam1: {lam1}, lam2: {lam2}, rt1_threshold: {rt1_th}, rt2_threshold: {rt2_th}, n_estimators: {n_estimators}, test_acc: {test_acc}')
-    pd.DataFrame(log,columns=['lam1','lam2','rt1_threshold','rt2_threshold','val_acc','test_acc','test_id', 'n_estimators']).to_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),index=False)
-
-def process_seed_xgboost(seed, params_combination, config):
-    # Ensure reproducibility
-    np.random.seed(seed)
-    python_random.seed(int(seed))
-
-    # Define KFold cross-validation
-    kf = KFold(n_splits=9, shuffle=True, random_state=seed)
-
-    # Load your data
-    samples = pd.read_csv(config['labels_path'])
-    features_combined = np.zeros((len(samples), 2))
-
-    # Initialize log
-    log = []
-
-    # Perform KFold cross-validation
-    for rest_index, test_index in kf.split(features_combined):
-        for param in params_combination:
-            lam1 = param[0]
-            lam2 = param[1]
-            rt1_th = param[2]
-            rt2_th = param[3]
-            n_estimators = param[4]
-
-            features = np.load(os.path.join(config['features_path'], f'features_lam1_{lam1}_lam2_{lam2}_rt1th_{rt1_th}_rt2th_{rt2_th}.npy'))
-
-            correct_val = 0
-            for val_id in rest_index:
-                train_index = np.delete(rest_index, np.where(rest_index == val_id))
-
-                X_val = features[val_id].reshape(1, -1)
-                y_val = samples[config['label_column_name']].to_numpy()[val_id].reshape(1, -1)
-                X_train = features[train_index]
-                y_train = samples[config['label_column_name']].to_numpy()[train_index]
-
-                xgb = XGBClassifier(n_estimators=n_estimators, random_state=seed)
-
-                # Fit the classifier to the data
-                xgb.fit(X_train, y_train)
-
-                # Make predictions on the validation set
-                prediction = xgb.predict(X_val)
-
-                if prediction == y_val:
-                    correct_val += 1
-
-            # Train on all training set
-            xgb = XGBClassifier(n_estimators=n_estimators, random_state=seed)
-            xgb.fit(features[rest_index], samples[config['label_column_name']].to_numpy()[rest_index])
-
-            X_test = features[test_index]
-            y_test = samples[config['label_column_name']].to_numpy()[test_index]
-            predictions_test = xgb.predict(X_test)
-            test_acc = accuracy_score(y_test, predictions_test)
-            log.append((lam1, lam2, rt1_th, rt2_th, correct_val / rest_index.shape[0], test_acc, test_index, n_estimators))
-
-            logger.info(f'lam1: {lam1}, lam2: {lam2}, rt1_threshold: {rt1_th}, rt2_threshold: {rt2_th}, n_estimators: {n_estimators}, test_acc: {test_acc}')
-
-    # Save the log to a CSV file
-    pd.DataFrame(log, columns=['lam1', 'lam2', 'rt1_threshold', 'rt2_threshold', 'val_acc', 'test_acc', 'test_id', 'n_estimators']).to_csv(os.path.join(config['eval_path'], f'eval_seed_{seed}.csv'), index=False)
+            logger.info(f'lam1: {lam1}, lam2: {lam2}, rt1_threshold: {rt1_th}, rt2_threshold: {rt2_th}, n_estimators: {n_estimators}, test_AUC: {test_AUC}')
+    pd.DataFrame(log,columns=['lam1','lam2','rt1_threshold','rt2_threshold','val_AUC','test_AUC','test_id', 'n_estimators']).to_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),index=False)
 
 
 def process_seed_NB(seed, params_combination, config):
     np.random.seed(seed)
     python_random.seed(int(seed))
-    kf = KFold(n_splits=9,shuffle=True, random_state=seed)
+    skf = StratifiedKFold(n_splits=6,shuffle=True, random_state=seed)
 
     samples = pd.read_csv(config['labels_path'])
     features_combined = np.zeros((len(samples),2))
@@ -318,7 +274,10 @@ def process_seed_NB(seed, params_combination, config):
     features_cache = {}
 
     log = []
-    for rest_index, test_index in kf.split(features_combined):
+
+    samples_labels = samples[config['label_column_name']].to_numpy()
+
+    for rest_index, test_index in skf.split(features_combined, samples_labels):
         for param in tqdm(params_combination, desc=f'Seed {seed} - Processing parameters'):
             lam1 = param[0]
             lam2 = param[1]
@@ -332,14 +291,16 @@ def process_seed_NB(seed, params_combination, config):
                 features_cache[feature_key] = np.load(os.path.join(config['features_path'], f'features_{feature_key}.npy'))
             features = features_cache[feature_key]
 
-            correct_val = 0
-            for val_id in rest_index:
-                train_index = np.delete(rest_index,np.where(rest_index == val_id))
-
-                X_val = features[val_id].reshape(1,-1)
-                y_val = samples[config['label_column_name']].to_numpy()[val_id].reshape(1,-1)
-                X_train = features[train_index]
-                y_train = samples[config['label_column_name']].to_numpy()[train_index]
+            # Inner loop for leave-one-out validation
+            skf_inner = StratifiedKFold(n_splits=5,shuffle=True, random_state=seed)
+            inner_features = features[rest_index]
+            inner_labels = samples_labels[rest_index]
+            inner_auc = []
+            for train_index, val_index in skf_inner.split(inner_features, inner_labels):
+                X_val = inner_features[val_index]
+                y_val = inner_labels[val_index]
+                X_train = inner_features[train_index]
+                y_train = inner_labels[train_index]
                 
                 nb = BernoulliNB(
                     alpha=alpha,
@@ -350,11 +311,12 @@ def process_seed_NB(seed, params_combination, config):
                 # Fit the classifier to the data
                 nb.fit(X_train, y_train)
 
-                # Make predictions on the test set and apply threshold
-                prediction = nb.predict(X_val)
+                # Compute auc
+                auc = roc_auc_score(y_val, nb.predict_proba(X_val)[:, 1])
 
-                if prediction == y_val:
-                    correct_val += 1
+                inner_auc.append(auc)
+
+            auc_val_mean = np.mean(inner_auc)
             
             # Train on all training set
             nb = BernoulliNB(
@@ -366,17 +328,17 @@ def process_seed_NB(seed, params_combination, config):
 
             X_test = features[test_index]
             y_test = samples[config['label_column_name']].to_numpy()[test_index]
-            predictions_test = nb.predict(X_test)
-            test_acc = accuracy_score(y_test, predictions_test)
-            log.append((lam1,lam2,rt1_th,rt2_th,correct_val/(rest_index.shape[0]),test_acc,test_index,alpha))
+            predictions_test = nb.predict_proba(X_test)
+            test_AUC = roc_auc_score(y_test, predictions_test[:, 1])
+            log.append((lam1,lam2,rt1_th,rt2_th,auc_val_mean,test_AUC,test_index,alpha))
 
             # Clear some memory if cache is too large
             if len(features_cache) > 10:  # Keep only last 10 feature sets
                 oldest_key = next(iter(features_cache))
                 del features_cache[oldest_key]
 
-            logger.info(f'lam1: {lam1}, lam2: {lam2}, rt1_threshold: {rt1_th}, rt2_threshold: {rt2_th}, alpha: {alpha}, test_acc: {test_acc}')
-    pd.DataFrame(log,columns=['lam1','lam2','rt1_threshold','rt2_threshold','val_acc','test_acc','test_id', 'alpha']).to_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),index=False)
+            logger.info(f'lam1: {lam1}, lam2: {lam2}, rt1_threshold: {rt1_th}, rt2_threshold: {rt2_th}, alpha: {alpha}, test_AUC: {test_AUC}')
+    pd.DataFrame(log,columns=['lam1','lam2','rt1_threshold','rt2_threshold','val_AUC','test_AUC','test_id', 'alpha']).to_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),index=False)
 
 def calc_accuracy(config):
     labels = pd.read_csv(config['labels_path'])
@@ -391,31 +353,31 @@ def calc_accuracy(config):
     std_test_per_seed = []
 
     for seed in seeds:
-        val_acc = []
-        test_acc = []
+        val_AUC = []
+        test_AUC = []
 
         result = pd.read_csv(os.path.join(config['eval_path'],f'eval_seed_{seed}.csv'),skipinitialspace=True)
 
-        kf = KFold(n_splits=9,shuffle=True, random_state=seed)
+        kf = StratifiedKFold(n_splits=6,shuffle=True, random_state=seed)
 
-        for rest_index, test_index in kf.split(test):
+        for rest_index, test_index in kf.split(test, labels[config['label_column_name']].to_numpy()):
 
             test_id = f'{test_index}'
 
             rs = result[result['test_id'] == test_id]
-            rs = rs.sort_values(by=['val_acc','rt2_threshold'], ascending=[False, True]).reset_index(drop=True)
+            rs = rs.sort_values(by=['val_AUC','rt2_threshold'], ascending=[False, True]).reset_index(drop=True)
 
-            row_with_max_val_acc = rs.iloc[0]
+            row_with_max_val_AUC = rs.iloc[0]
 
-            val_acc.append(row_with_max_val_acc['val_acc'])
-            test_acc.append(row_with_max_val_acc['test_acc'])
+            val_AUC.append(row_with_max_val_AUC['val_AUC'])
+            test_AUC.append(row_with_max_val_AUC['test_AUC'])
 
-        avg_val_per_seed.append(np.array(val_acc).mean()*100)
-        avg_test_per_seed.append(np.array(test_acc).mean()*100)
+        avg_val_per_seed.append(np.array(val_AUC).mean()*100)
+        avg_test_per_seed.append(np.array(test_AUC).mean()*100)
 
-        std_test_per_seed.append(np.array(test_acc).std()*100)
-    logger.info(f'avg validation acc: {np.array(avg_val_per_seed).mean()}±{np.array(avg_val_per_seed).std()}')
-    logger.info(f'avg test acc: {np.array(avg_test_per_seed).mean()}±{np.array(avg_test_per_seed).std()}')
+        std_test_per_seed.append(np.array(test_AUC).std()*100)
+    logger.info(f'avg validation AUC: {np.array(avg_val_per_seed).mean()}±{np.array(avg_val_per_seed).std()}')
+    logger.info(f'avg test AUC: {np.array(avg_test_per_seed).mean()}±{np.array(avg_test_per_seed).std()}')
 
     print(avg_test_per_seed)
     print(std_test_per_seed)

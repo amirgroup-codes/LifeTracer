@@ -19,7 +19,7 @@ config = {
     "peaks_dir_path": "output/peaks/", # Path to peaks
     "results_dir": "output/lr_l2_results/", # Path to results to be saved
 
-    # Logistic Regression with l2 regularization
+    # Logistic Regression with l2 regularization (The best C was obtained from step 6)
     "C": 0.1,
 
     # Set the seed for reproducibility

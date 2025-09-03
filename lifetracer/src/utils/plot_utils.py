@@ -22,8 +22,8 @@ import matplotlib.font_manager as fm
 from loguru import logger
 import ast
 
-
-font_path = '/usr/scratch/dtsui/Helvetica.ttf'
+# Not necessarily required (remove if not needed)
+font_path = 'markers/Helvetica.ttf'
 font_prop = fm.FontProperties(fname=font_path)
 fm.fontManager.addfont(font_path)
 font_name = font_prop.get_name()
