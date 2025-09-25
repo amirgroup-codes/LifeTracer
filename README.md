@@ -102,6 +102,8 @@ pip install -e .
 python -c "import lifetracer; print('LifeTracer installed successfully!')"
 ```
 
+See [this link](https://github.com/kapsakcj/win10-linux-conda-how-to) for step by step conda installation on Windows.
+
 ### Troubleshooting
 
 | Issue | Solution |
